@@ -15,9 +15,9 @@ function noise(seed, x) {
   return random(seed, i) * (1 - t) + random(seed, i + 1) * t;
 }
 export function ridge(seed, x, layer) {
-  const envelope = Math.pow(noise(seed + layer * 7919, x / 65), 1.4);
-  const detail = noise(seed + 17 + layer, x / 13) * .17 + noise(seed + 89, x / 5) * .045;
-  return (layer === 0 ? 20 : 27) - (layer === 0 ? 18 : 20) * (envelope + detail);
+  const envelope = .12 + .88 * Math.pow(noise(seed + layer * 7919, x / (layer === 0 ? 40 : 30)), .8);
+  const detail = noise(seed + 17 + layer, x / 9) * .08 + noise(seed + 89, x / 4) * .025;
+  return (layer === 0 ? 25 : 29) - (layer === 0 ? 23 : 25) * (envelope + detail);
 }
 
 export function paintTile(ctx, seed, start, width, height) {
