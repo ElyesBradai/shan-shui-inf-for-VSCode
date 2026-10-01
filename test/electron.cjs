@@ -23,7 +23,8 @@ async function main() {
   }));
   const common = ['--no-sandbox', '--disable-gpu', '--user-data-dir', userData, '--extensions-dir', extensions];
   // Exercise the shipped VSIX with VS Code's own installer.
-  await runVSCodeCommand([...common, '--install-extension', path.join(root, 'artifacts/shan-shui-statusbar-1.0.0.vsix'), '--force'], { version });
+  const extensionVersion = require('../package.json').version;
+  await runVSCodeCommand([...common, '--install-extension', path.join(root, `artifacts/shan-shui-statusbar-${extensionVersion}.vsix`), '--force'], { version });
   await install(appRoot, root, { speed: 40, pauseWhenUnfocused: false, respectReducedMotion: false });
   let browser;
   try {

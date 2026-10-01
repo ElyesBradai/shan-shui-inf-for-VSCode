@@ -4,12 +4,10 @@
 node_modules/**
 test/**
 scripts/**
-renderer/**
 artifacts/**
-screenshots/**
+dist/**
+releases/**
 .vscode-test/**
 test-results/**
-index.html
-CNAME
 .gitignore
 *.vsix

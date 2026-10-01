@@ -1,79 +1,78 @@
 # Shan Shui for VS Code
 
-An infinitely generated Chinese ink landscape scrolling across the **actual bottom status bar**, behind its normal controls. Every window launch or reload starts with a fresh random seed. Scenery is generated continuously; this is not a looping wallpaper.
+A lightweight, endlessly scrolling ink landscape behind the **actual bottom status bar**. Every window launch or reload gets a fresh random seed.
 
-Based on [Lingdong Huang's Shan Shui](https://github.com/LingDong-/shan-shui-inf). The original browser artwork remains in `index.html`.
+Version **1.1.0** replaces the expensive full-size SVG renderer with small canvas tiles designed for a 22-pixel status bar. Mountains and trees use the same scale in both directions.
 
-## Install
+## Remove version 1.0 first
 
-1. [Download shan-shui-statusbar-1.0.0.vsix](https://github.com/ElyesBradai/shan-shui-inf-for-VSCode/raw/refs/heads/master/releases/shan-shui-statusbar-1.0.0.vsix).
-2. In desktop VS Code, open **Extensions → … → Install from VSIX…** and select the downloaded file.
-3. Open the Command Palette (`Ctrl+Shift+P` on Windows/Linux, `Cmd+Shift+P` on macOS). Run **Shan Shui: Enable / Repair Landscape** and accept the installation notice.
-4. Click **Reload Window**. The landscape starts automatically on future launches.
+1. Run **Shan Shui: Restore Original Status Bar** from the Command Palette.
+2. Reload, then **close every VS Code window** to release the old renderer.
+3. Reopen VS Code and uninstall **Shan Shui** from Extensions.
 
-Keep **View → Appearance → Status Bar** enabled. Default speed is a gentle 8 pixels/second. By default, motion pauses while another application has focus and honors your operating system's reduced-motion preference. Change these settings if you want it moving while unfocused.
+If you already uninstalled it, install the new VSIX temporarily and run Restore; it also removes the old 1.0 patch. Disabling/uninstalling an extension alone cannot remove an existing workbench customization.
 
-Alternatively, with the VS Code CLI available:
+## Install 1.1.0
 
-```sh
-code --install-extension shan-shui-statusbar-1.0.0.vsix
-```
+1. [Download shan-shui-statusbar-1.1.0.vsix](https://github.com/ElyesBradai/shan-shui-inf-for-VSCode/raw/refs/heads/master/releases/shan-shui-statusbar-1.1.0.vsix).
+2. In VS Code choose **Extensions → … → Install from VSIX…**.
+3. Run **Shan Shui: Enable / Repair Landscape** and choose **Reload Window**.
 
-Then run the enable command and reload as above.
+Keep **View → Appearance → Status Bar** enabled. By default, scrolling pauses when the window loses focus or your operating system requests reduced motion.
 
-## How this integrates with VS Code
+## Resource use
 
-VS Code's [supported extension API](https://code.visualstudio.com/api/extension-capabilities/overview#restrictions) does not allow images or arbitrary HTML in its native status bar. This extension therefore uses an **unsupported, reversible desktop workbench customization**. It saves a backup of `workbench.html`, adds local script/style references, and authorizes one narrowly scoped Trusted Types policy for its worker. It does not disable the Content Security Policy or alter VS Code's integrity checks.
-
-- VS Code may show an **installation appears to be corrupt / modified** warning because its workbench was customized. Restoring the original status bar reverses this customization. Other installed customizers may independently cause the same warning.
-- This requires **desktop VS Code 1.96+ with a writable installation**. Windows User Setup and a user-owned Linux archive are convenient options. A macOS installation must be writable. Read-only/Snap/system-managed installations can reject the change; the extension explains the permission error and never elevates itself.
-- The extension runs locally (`extensionKind: ui`) when using desktop VS Code with SSH, WSL or containers. Install it on the **local** side. VS Code for the Web is unsupported.
-- VS Code updates can replace the customization. When previously enabled, the extension reapplies it and asks you to reload. If a future VS Code changes its internal layout, use Restore and report the version; compatibility with arbitrary future internal changes cannot be guaranteed.
-- The customization affects windows of the same VS Code installation. Settings apply when you enable/repair and reload the affected windows. Windows each use their own seed. The extension does not modify workspace settings.
+- No SVG documents, image decoders, blobs, workers, or stored scene geometry.
+- Only the visible 256-pixel tiles are cached. Evicted canvas buffers are explicitly zeroed.
+- At a 1920 × 22 status bar and 2× display scaling, the display and tile buffers total **under 1.5 MiB**. This is backing-buffer accounting, not a promise about total VS Code process memory or browser overhead.
+- Default **20 FPS**, with no timer or animation callback running while paused.
+- Both axes scale equally; the scene is drawn for the status bar's height rather than squeezing a tall painting.
+- No observer on the editor's full DOM tree.
+- Offline, zero runtime dependencies, no telemetry.
 
 ## Commands and settings
 
 | Command | Action |
 | --- | --- |
-| **Shan Shui: Enable / Repair Landscape** | Install, repair after updates, or apply settings; then reload. |
-| **Shan Shui: Restore Original Status Bar** | Remove the customization and restore the native bar; then reload. |
-| **Shan Shui: New Random Landscape** | Reload the window with new randomly generated scenery. |
-| **Shan Shui: Settings** | Open the extension's settings. |
+| **Enable / Repair Landscape** | Install or apply settings, then reload. |
+| **Restore Original Status Bar** | Remove the patch, then reload. Run before uninstalling. |
+| **New Random Landscape** | Reload with a new seed. |
+| **Settings** | Open the extension settings. |
 
-| Setting | Default | Description |
+All commands start with **Shan Shui:**.
+
+| Setting | Default | Range / behavior |
 | --- | --- | --- |
-| `shanShui.speed` | `8` | Pixels/second, 0–80; `0` pauses. |
-| `shanShui.opacity` | `0.85` | Artwork opacity, 0.1–1. Labels retain a solid background for readability. |
-| `shanShui.maxFPS` | `30` | Frame cap, 10–60. |
-| `shanShui.pauseWhenUnfocused` | `true` | Pause when the window loses focus. |
-| `shanShui.respectReducedMotion` | `true` | Honor the operating system's reduced-motion setting. |
+| `shanShui.speed` | `6` | 0–80 pixels/second; 0 pauses. |
+| `shanShui.opacity` | `0.85` | 0.1–1. |
+| `shanShui.maxFPS` | `20` | 10–30. |
+| `shanShui.pauseWhenUnfocused` | `true` | Pause while another window has focus. |
+| `shanShui.respectReducedMotion` | `true` | Honor the OS motion preference. |
 
-After editing a setting, choose **Apply** and **Reload Window**, or run Enable / Repair manually. There is intentionally no fixed seed setting: every launch/reload is random.
+Choose **Apply** and **Reload Window** after changing settings. Existing user settings are preserved on upgrade; reset `shanShui.speed` and `shanShui.maxFPS` to use the new defaults.
 
-## Remove or recover
+## Desktop customization
 
-**Run Restore Original Status Bar and reload before disabling or uninstalling this extension.** Disabling an extension alone cannot undo an already applied workbench customization. The restore command removes only this extension's marked HTML block and policy entry, preserving unrelated customizations. If the workbench has not otherwise changed, the saved file is restored byte-for-byte.
+VS Code's supported API does not expose native status-bar images. This extension uses a **reversible, unsupported desktop workbench patch**. It backs up `workbench.html` and adds local script/style references. Version 1.1 leaves the Content Security Policy unchanged and removes the old worker policy when upgrading.
 
-If VS Code cannot open, close it and locate its `resources/app/out/vs/code/electron-browser/workbench/` directory (some versions use `electron-sandbox`). Replace `workbench.html` with the sibling **`workbench.html.shan-shui-original`** backup and delete the `shan-shui-assets` folder. If other customizers changed the file after that backup, reinstalling VS Code is the clean recovery route; your projects are separate from the application files.
+A writable **desktop VS Code 1.96+** installation is required. Windows User Setup or a user-owned Linux archive is suitable; macOS application files must be writable. Install the extension locally when using SSH/WSL/containers. VS Code for the Web and read-only installations are unsupported. No administrator privileges are requested.
 
-## Performance and privacy
+VS Code can show a **modified/corrupt installation** warning. The extension does not hide integrity checks. Updates can replace the patch; previously enabled installations are repaired on startup and prompt for a reload. Future changes to VS Code's internal UI may require an extension update. Reload every affected window after applying or restoring the patch.
 
-The original SVG drawing engine runs in a dedicated worker, separate from the editor UI. The display rasterizes generated tiles and scrolls a small canvas with `requestAnimationFrame`. New scenery is prefetched; old tiles, drawing objects and planner cells are discarded. If rendering falls behind, scrolling waits for the next tile rather than exposing an empty gap. Hidden windows stop animation. Status bar height, commands, hover behavior and clicks remain available.
+If VS Code cannot open: close all its windows, locate `resources/app/out/vs/code/electron-browser/workbench/` (older versions: `electron-sandbox`), replace `workbench.html` with its sibling `workbench.html.shan-shui-original` backup, and remove `shan-shui-assets`. If other customizers changed the file after the backup, reinstall VS Code for a clean application installation.
 
-The extension works offline. It has no runtime dependencies, telemetry, network requests, or external images. It never overrides the workbench's `Math.random`; the drawing engine has its own seeded generator.
+## Development
 
-## Build and test
-
-Node.js 20+ is sufficient; no dependency installation is needed for the build or core tests:
+Node.js 20+; no build or dependency installation is required:
 
 ```sh
 npm test
 npm run package
 ```
 
-The VSIX appears in `artifacts/`. `npm run build` extracts the upstream drawing code from `index.html` and combines it with the isolated worker adapter. Press F5 to run the extension in an Extension Development Host. **Enabling there customizes that VS Code installation too; use a disposable installation for development.**
+The VSIX is written to `artifacts/`. F5 launches an Extension Development Host; use a disposable VS Code installation because enabling patches that installation.
 
-Core tests execute the real generator for 35 sequential tiles and verify seed behavior, valid SVG, bounded caches, install/repair/restore, update handling, locking and CSP preservation. Browser and real desktop tests run in [GitHub Actions](https://github.com/ElyesBradai/shan-shui-inf-for-VSCode/actions) and can be run locally with optional test tools:
+Optional integration tests:
 
 ```sh
 npm install --no-save --package-lock=false playwright@1 @vscode/test-electron@2
@@ -82,8 +81,8 @@ npm run test:browser
 npm run test:electron
 ```
 
-On headless Linux use `xvfb-run -a npm run test:electron`. The desktop test downloads a disposable VS Code, installs the packaged VSIX using its CLI, verifies extension commands, checks actual status bar rendering/scrolling via Chromium debugging, and restores the test installation. CI also validates packaging with Microsoft's `@vscode/vsce` and uploads the VSIX and screenshots.
+Use `xvfb-run -a npm run test:electron` on headless Linux. [CI](https://github.com/ElyesBradai/shan-shui-inf-for-VSCode/actions) checks official VSIX packaging, native desktop rendering, command activation, fresh seeds, resizing, clicks, reduced motion, and a 5,000-tile browser stress run. The stress test checks JS heap growth, retained DOM nodes, bounded raster buffers, and Linux renderer RSS growth; its JSON report and screenshots are uploaded with the package.
 
-## Attribution
+## Origin and license
 
-Original landscape algorithms and browser demo: **Lingdong Huang**, copyright 2018, [MIT License](LICENSE). The generator includes its upstream Perlin noise attribution to Processing/p5.js. This adaptation retains the original license and artwork source.
+Inspired by [Lingdong Huang's Shan Shui](https://github.com/LingDong-/shan-shui-inf). The original full-page generator and demo assets were removed from the current extension to keep it small; they remain in Git history. The original [MIT license](LICENSE) is retained.

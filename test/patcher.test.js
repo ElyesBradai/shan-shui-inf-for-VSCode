@@ -22,7 +22,7 @@ test('CSP stays intact and a patch strips byte-for-byte', async () => {
   assert.equal(patchHTML(patched, '0123456789abcdef0123'), patched);
   assert.match(patched, /script-src 'self' 'unsafe-eval' blob:/);
   assert.match(patched, /require-trusted-types-for 'script'/);
-  assert.equal((patched.match(/shanShuiWorker/g) || []).length, 1);
+  assert.equal((patched.match(/shanShuiWorker/g) || []).length, 0);
   assert.equal((patched.match(/SHAN-SHUI:BEGIN/g) || []).length, 1);
 });
 for (const kind of ['electron-browser', 'electron-sandbox']) {
@@ -32,10 +32,10 @@ for (const kind of ['electron-browser', 'electron-sandbox']) {
     const patched = await fs.readFile(file, 'utf8');
     assert.equal(await fs.readFile(file + '.shan-shui-original', 'utf8'), original);
     assert.equal((await install(app, root, {})).changed, false);
-    const worker = path.join(path.dirname(file), patched.match(/\.\/([^" ]+)\/statusbar\.js/)[1], 'landscape-worker.js');
-    await fs.rm(worker);
+    const asset = path.join(path.dirname(file), patched.match(/\.\/([^" ]+)\/statusbar\.js/)[1], 'landscape.mjs');
+    await fs.rm(asset);
     assert.equal((await install(app, root, {})).changed, true);
-    assert.ok((await fs.stat(worker)).size > 10000);
+    assert.ok((await fs.stat(asset)).size > 1000);
     assert.equal((await uninstall(app)).changed, true);
     assert.equal(await fs.readFile(file, 'utf8'), original);
     assert.equal((await uninstall(app)).changed, false);
@@ -78,6 +78,19 @@ test('lock excludes simultaneous workbench writes', async t => {
 });
 test('invalid configuration cannot inject script content', () => {
   assert.deepEqual(normalizeConfig({ speed: '</script>', maxFPS: Infinity, opacity: -10 }), {
-    speed: 8, opacity: .1, maxFPS: 30, pauseWhenUnfocused: true, respectReducedMotion: true
+    speed: 6, opacity: .1, maxFPS: 20, pauseWhenUnfocused: true, respectReducedMotion: true
   });
+});
+
+test('upgrade removes the v1.0 worker policy and can restore its original backup', async t => {
+  const { app, file, original } = await fixture(t);
+  const hash = '0123456789abcdef0123';
+  const legacy = original.replace('amdLoader defaultWorkerFactory', 'amdLoader defaultWorkerFactory shanShuiWorker')
+    .replace('</html>', `\n<!-- SHAN-SHUI:BEGIN -->\n<link rel="stylesheet" href="./shan-shui-assets/${hash}/statusbar.css">\n<script type="module" src="./shan-shui-assets/${hash}/statusbar.js" data-shan-shui-policy="added"></script>\n<!-- SHAN-SHUI:END --></html>`);
+  await fs.writeFile(file, legacy);
+  await fs.writeFile(file + '.shan-shui-original', original);
+  await install(app, root, {});
+  assert.doesNotMatch(await fs.readFile(file, 'utf8'), /shanShuiWorker/);
+  await uninstall(app);
+  assert.equal(await fs.readFile(file, 'utf8'), original);
 });

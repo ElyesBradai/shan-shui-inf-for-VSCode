@@ -31,3 +31,4 @@ jobs:
           path: |
             artifacts/*.vsix
             test-results/*.png
+            test-results/*.json

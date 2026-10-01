@@ -4,7 +4,6 @@ const path = require('node:path');
 const crypto = require('node:crypto');
 const BEGIN = '<!-- SHAN-SHUI:BEGIN -->';
 const END = '<!-- SHAN-SHUI:END -->';
-const POLICY = 'shanShuiWorker';
 const ASSETS = 'shan-shui-assets';
 const BACKUP = '.shan-shui-original';
 
@@ -12,8 +11,8 @@ function normalizeConfig(input = {}) {
   const number = (key, fallback, min, max) => typeof input[key] === 'number' && Number.isFinite(input[key])
     ? Math.min(max, Math.max(min, input[key])) : fallback;
   return {
-    speed: number('speed', 8, 0, 80), opacity: number('opacity', .85, .1, 1),
-    maxFPS: Math.round(number('maxFPS', 30, 10, 60)),
+    speed: number('speed', 6, 0, 80), opacity: number('opacity', .85, .1, 1),
+    maxFPS: Math.round(number('maxFPS', 20, 10, 30)),
     pauseWhenUnfocused: input.pauseWhenUnfocused !== false,
     respectReducedMotion: input.respectReducedMotion !== false
   };
@@ -32,24 +31,14 @@ function stripPatch(html) {
   return clean;
 }
 function patchHTML(html, hash) {
-  let clean = stripPatch(html);
+  const clean = stripPatch(html);
   if (!/<\/html\s*>/i.test(clean)) throw new Error('Unsupported workbench: missing closing HTML tag.');
-  let addedPolicy = false;
   const csp = /(<meta\b[^>]*http-equiv=["']Content-Security-Policy["'][^>]*content=")([^"]*)("[^>]*>)/i;
   const match = clean.match(csp);
   if (!match) throw new Error('Unsupported workbench: cannot identify its Content Security Policy. No files changed.');
-  let policy = match[2];
-  const trusted = /(^|;)\s*trusted-types\s+([^;]*)(;|$)/;
-  const tt = policy.match(trusted);
-  if (tt && !tt[2].split(/\s+/).includes(POLICY)) {
-    if (tt[2].includes("'none'")) throw new Error('This workbench disables Trusted Types policies. No files changed.');
-    policy = policy.replace(trusted, (whole, prefix, names, suffix) => whole.replace(names, `${names} ${POLICY}`));
-    addedPolicy = true;
-  }
-  // Preserve every CSP directive; only authorize the narrowly scoped worker policy.
-  clean = clean.replace(csp, (_all, a, _b, c) => a + policy + c);
+  // Native canvas rendering needs no additional CSP or Trusted Types permissions.
   const base = `./${ASSETS}/${hash}`;
-  const block = `\n${BEGIN}\n<link rel="stylesheet" href="${base}/statusbar.css">\n<script type="module" src="${base}/statusbar.js" data-shan-shui-policy="${addedPolicy ? 'added' : 'existing'}"></script>\n${END}`;
+  const block = `\n${BEGIN}\n<link rel="stylesheet" href="${base}/statusbar.css">\n<script type="module" src="${base}/statusbar.js"></script>\n${END}`;
   return clean.replace(/<\/html\s*>/i, block + '$&');
 }
 async function findWorkbench(appRoot) {
@@ -89,13 +78,13 @@ async function install(appRoot, extensionRoot, input) {
     const before = await fs.readFile(file, 'utf8');
     const clean = stripPatch(before);
     const config = normalizeConfig(input);
-    const [renderer, css, worker] = await Promise.all(['statusbar.js', 'statusbar.css', 'landscape-worker.js']
-      .map(name => fs.readFile(path.join(extensionRoot, 'dist', name), 'utf8')));
-    const js = `const SHAN_SHUI_CONFIG = ${JSON.stringify({ ...config, worker: './landscape-worker.js' })};\n${renderer}`;
-    const hash = crypto.createHash('sha256').update(js).update(css).update(worker).digest('hex').slice(0, 20);
+    const [renderer, css, landscape] = await Promise.all(['statusbar.js', 'statusbar.css', 'landscape.mjs']
+      .map(name => fs.readFile(path.join(extensionRoot, 'renderer', name), 'utf8')));
+    const js = `const SHAN_SHUI_CONFIG = ${JSON.stringify(config)};\n${renderer}`;
+    const hash = crypto.createHash('sha256').update(js).update(css).update(landscape).digest('hex').slice(0, 20);
     const after = patchHTML(clean, hash);
     const directory = path.join(path.dirname(file), ASSETS, hash);
-    const contents = { 'statusbar.js': js, 'statusbar.css': css, 'landscape-worker.js': worker };
+    const contents = { 'statusbar.js': js, 'statusbar.css': css, 'landscape.mjs': landscape };
     let assetsMatch = true;
     for (const [name, content] of Object.entries(contents)) {
       try { if (await fs.readFile(path.join(directory, name), 'utf8') !== content) assetsMatch = false; }
