@@ -1,0 +1,33 @@
+name: Extension checks
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm test
+      - run: npm run package
+      - name: Install integration test tools
+        run: npm install --no-save --package-lock=false playwright@1 @vscode/test-electron@2 @vscode/vsce@3
+      - name: Validate with the official extension packager
+        run: npx vsce package --no-dependencies --allow-missing-repository --out artifacts/shan-shui-official.vsix
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:browser
+      - name: Run desktop VS Code integration
+        run: xvfb-run -a npm run test:electron
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: shan-shui-statusbar
+          path: |
+            artifacts/*.vsix
+            test-results/*.png

@@ -1,0 +1,20 @@
+.monaco-workbench .part.statusbar.shan-shui-active {
+  isolation: isolate;
+}
+.monaco-workbench .part.statusbar > .shan-shui-landscape {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1;
+  opacity: var(--shan-shui-opacity, .85);
+}
+.monaco-workbench .part.statusbar.shan-shui-active > .items-container {
+  position: relative;
+  z-index: 1;
+}
+.monaco-workbench .part.statusbar.shan-shui-active > .items-container > .statusbar-item:not(.has-background-color):not(.warning-kind):not(.error-kind):not(.remote-kind):not(.prominent-kind):not(.offline-kind) > .statusbar-item-label {
+  background-color: var(--vscode-statusBar-background, #181818);
+  border-radius: 3px;
+}

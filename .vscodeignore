@@ -1,0 +1,15 @@
+.git/**
+.github/**
+.vscode/**
+node_modules/**
+test/**
+scripts/**
+renderer/**
+artifacts/**
+screenshots/**
+.vscode-test/**
+test-results/**
+index.html
+CNAME
+.gitignore
+*.vsix

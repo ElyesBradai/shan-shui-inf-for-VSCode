@@ -1,0 +1,42 @@
+{
+  "name": "shan-shui-statusbar",
+  "displayName": "Shan Shui — Infinite Landscape Status Bar",
+  "description": "An endlessly generated Chinese ink landscape scrolling behind your VS Code status bar. New random scenery on every launch.",
+  "version": "1.0.0",
+  "publisher": "ElyesBradai",
+  "license": "MIT",
+  "repository": { "type": "git", "url": "https://github.com/ElyesBradai/shan-shui-inf-for-VSCode.git" },
+  "engines": { "vscode": "^1.96.0", "node": ">=20" },
+  "categories": ["Other"],
+  "keywords": ["shan shui", "landscape", "status bar", "generative art"],
+  "main": "./src/extension.js",
+  "extensionKind": ["ui"],
+  "activationEvents": ["onStartupFinished"],
+  "capabilities": { "untrustedWorkspaces": { "supported": true }, "virtualWorkspaces": true },
+  "scripts": {
+    "build": "node scripts/build.js",
+    "test": "node scripts/build.js && node --test test/*.test.js",
+    "test:browser": "node test/browser.cjs",
+    "test:electron": "node test/electron.cjs",
+    "package": "node scripts/build.js && node scripts/package.js",
+    "vscode:prepublish": "node scripts/build.js"
+  },
+  "contributes": {
+    "commands": [
+      { "command": "shanShui.enable", "title": "Shan Shui: Enable / Repair Landscape" },
+      { "command": "shanShui.disable", "title": "Shan Shui: Restore Original Status Bar" },
+      { "command": "shanShui.newLandscape", "title": "Shan Shui: New Random Landscape" },
+      { "command": "shanShui.settings", "title": "Shan Shui: Settings" }
+    ],
+    "configuration": {
+      "title": "Shan Shui",
+      "properties": {
+        "shanShui.speed": { "type": "number", "default": 8, "minimum": 0, "maximum": 80, "scope": "application", "description": "Scroll speed in pixels per second. Set to 0 to pause. Apply changes with Enable / Repair Landscape, then reload." },
+        "shanShui.opacity": { "type": "number", "default": 0.85, "minimum": 0.1, "maximum": 1, "scope": "application", "description": "Landscape opacity. Existing status bar labels stay above the artwork." },
+        "shanShui.pauseWhenUnfocused": { "type": "boolean", "default": true, "scope": "application", "description": "Pause scrolling while the VS Code window is unfocused." },
+        "shanShui.respectReducedMotion": { "type": "boolean", "default": true, "scope": "application", "description": "Keep the landscape still when the operating system requests reduced motion." },
+        "shanShui.maxFPS": { "type": "integer", "default": 30, "minimum": 10, "maximum": 60, "scope": "application", "description": "Maximum animation frames per second." }
+      }
+    }
+  }
+}
