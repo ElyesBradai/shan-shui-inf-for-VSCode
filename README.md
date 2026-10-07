@@ -2,7 +2,7 @@
 
 A lightweight, endlessly scrolling ink landscape behind the **actual bottom status bar**. Every window launch or reload gets a fresh random seed.
 
-Version **1.3.2** uses a layered canvas renderer: distant mountains, foreground mountains, mist, trees, and occasional landmarks are rendered separately so the landscape has real depth while scrolling. The renderer remains tile-based and height-native for a 22-pixel status bar.
+Version **1.3.3** uses a layered canvas renderer: distant mountains, foreground mountains, mist, trees, and occasional landmarks are rendered separately so the landscape has real depth while scrolling. The renderer remains tile-based and height-native for a 22-pixel status bar.
 
 ![Shan Shui status bar preview](https://raw.githubusercontent.com/ElyesBradai/shan-shui-inf-for-VSCode/master/docs/statusbar-preview.svg)
 
@@ -26,9 +26,9 @@ Atmospheric layers rasterize at 1× when the display DPR is higher than 1; the f
 
 If you already uninstalled it, install the new VSIX temporarily and run Restore; it also removes the old 1.0 patch. Disabling/uninstalling an extension alone cannot remove an existing workbench customization.
 
-## Install 1.3.2
+## Install 1.3.3
 
-[**Download shan-shui-statusbar-1.3.2.vsix**](https://github.com/ElyesBradai/shan-shui-inf-for-VSCode/raw/refs/heads/master/releases/shan-shui-statusbar-1.3.2.vsix)
+[**Download shan-shui-statusbar-1.3.3.vsix**](https://github.com/ElyesBradai/shan-shui-inf-for-VSCode/raw/refs/heads/master/releases/shan-shui-statusbar-1.3.3.vsix)
 
 1. Download the latest `.vsix` asset from the release.
 2. In VS Code choose **Extensions → … → Install from VSIX…**.
@@ -64,7 +64,8 @@ All commands start with **Shan Shui:**.
 | `shanShui.maxFPS` | `20` | 10–30. |
 | `shanShui.pauseWhenUnfocused` | `true` | Pause while another window has focus. |
 | `shanShui.respectReducedMotion` | `true` | Honor the OS motion preference. |
-| `shanShui.mode | system | Choose day, night, or system (follows your OS appearance).\n
+| `shanShui.mode` | `system` | Choose day, night, or system (follows your OS appearance). |
+
 Choose **Apply** and **Reload Window** after changing settings. Existing user settings are preserved on upgrade; reset `shanShui.speed` and `shanShui.maxFPS` to use the new defaults.
 
 ## Desktop customization
