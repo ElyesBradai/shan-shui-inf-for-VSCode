@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.3.0
+
+- Added richer, more colorful day and night scenery palettes.
+- Enlarged foreground trees, pagodas, boats, and bridges so they stand out at status-bar scale.
+- Added `shanShui.mode` with `auto`, `day`, and `night` modes; `auto` follows the system color scheme.
+- Updated the README to link directly to the 1.3.0 VSIX.
+
+
 ## 1.2.0
 
 - Add layered distant, foreground, and detail rendering for depth.
