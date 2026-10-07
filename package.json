@@ -1,8 +1,8 @@
 {
   "name": "shan-shui-statusbar",
-  "displayName": "Shan Shui \u2014 Infinite Landscape Status Bar",
+  "displayName": "Shan Shui — Infinite Landscape Status Bar",
   "description": "Lightweight, naturally proportioned ink scenery scrolling across the native status bar. A fresh random landscape every launch.",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "publisher": "ElyesBradai",
   "license": "MIT",
   "repository": {
@@ -97,7 +97,7 @@
           "minimum": 10,
           "maximum": 30,
           "scope": "application",
-          "description": "Maximum animation frames per second (10\u201330). Defaults to 20 to reduce CPU use."
+          "description": "Maximum animation frames per second (10–30). Defaults to 20 to reduce CPU use."
         }
       }
     }
