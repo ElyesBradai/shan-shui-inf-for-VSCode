@@ -15,7 +15,7 @@ function normalizeConfig(input = {}) {
     maxFPS: Math.round(number('maxFPS', 20, 10, 30)),
     pauseWhenUnfocused: input.pauseWhenUnfocused !== false,
     respectReducedMotion: input.respectReducedMotion !== false,
-    mode: ['auto', 'day', 'night'].includes(input.mode) ? input.mode : 'auto'
+    mode: ['system', 'day', 'night'].includes(input.mode) ? input.mode : 'system'
   };
 }
 function stripPatch(html) {
