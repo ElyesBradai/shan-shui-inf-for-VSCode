@@ -46,7 +46,7 @@ import { createLandscape, MAX_WIDTH, MAX_HEIGHT } from './landscape.mjs';
       canvas.style.setProperty('--shan-shui-opacity', String(config.opacity));
       landscape = createLandscape(canvas, config);
       const theme = matchMedia('(prefers-color-scheme: dark)');
-      const applyTheme = () => landscape?.setMode(config.mode === 'auto' ? (theme.matches ? 'night' : 'day') : config.mode);
+      const applyTheme = () => landscape?.setMode(config.mode === 'system' ? (theme.matches ? 'night' : 'day') : config.mode);
       themeListener = applyTheme;
       applyTheme();
       theme.addEventListener('change', applyTheme, { signal: listeners.signal });
