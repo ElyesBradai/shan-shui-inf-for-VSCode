@@ -106,22 +106,58 @@ function drawTrees(ctx, seed, left, right, palette) {
 
 function drawPagoda(ctx, x, ground, palette) {
   ctx.save();
+  const height = 10.5;
+  const base = ground - .2;
   ctx.strokeStyle = palette.landmarkStroke;
   ctx.fillStyle = palette.landmarkFill;
-  ctx.lineWidth = .75;
+  ctx.lineWidth = .7;
+
+  // Warm, prominent multi-tier pagoda with broad roofs and a visible spire.
+  ctx.beginPath();
+  ctx.moveTo(x - 1.9, base);
+  ctx.lineTo(x - 1.9, base - height + 1.2);
+  ctx.lineTo(x + 1.9, base - height + 1.2);
+  ctx.lineTo(x + 1.9, base);
+  ctx.closePath();
+  ctx.fill();
+  ctx.stroke();
+
+  const tiers = [
+    { y: base - 1.5, w: 5.2, drop: 1.15 },
+    { y: base - 4.0, w: 4.6, drop: 1.0 },
+    { y: base - 6.5, w: 4.0, drop: .9 },
+    { y: base - 9.0, w: 3.2, drop: .75 }
+  ];
+
+  for (const tier of tiers) {
+    ctx.beginPath();
+    ctx.moveTo(x - tier.w, tier.y);
+    ctx.quadraticCurveTo(x, tier.y - tier.drop, x + tier.w, tier.y);
+    ctx.lineTo(x + tier.w * .72, tier.y + .45);
+    ctx.lineTo(x - tier.w * .72, tier.y + .45);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(x - tier.w * .55, tier.y + .55);
+    ctx.lineTo(x + tier.w * .55, tier.y + .55);
+    ctx.stroke();
+  }
 
   ctx.beginPath();
-  ctx.moveTo(x, ground);
-  ctx.lineTo(x, ground - 5);
-  ctx.moveTo(x - 3.5, ground - 6);
-  ctx.lineTo(x + 3.5, ground - 6);
-  ctx.moveTo(x - 1.8, ground - 6);
-  ctx.lineTo(x - 2.5, ground - 7);
-  ctx.moveTo(x + 1.8, ground - 4.5);
-  ctx.lineTo(x + 2.5, ground - 5.5);
-  ctx.moveTo(x - 1.4, ground - 3.5);
-  ctx.lineTo(x + 1.4, ground - 3.5);
+  ctx.moveTo(x, base - height);
+  ctx.lineTo(x, base - height - 1.5);
+  ctx.moveTo(x - .7, base - height - 1.1);
+  ctx.lineTo(x, base - height - 2.1);
+  ctx.lineTo(x + .7, base - height - 1.1);
   ctx.stroke();
+
+  // Small windows give the silhouette more character without overwhelming it.
+  ctx.fillStyle = palette.landmarkStroke;
+  for (const y of [base - 2.5, base - 5.0, base - 7.5]) {
+    ctx.fillRect(x - .55, y, 1.1, .8);
+  }
   ctx.restore();
 }
 
@@ -160,11 +196,11 @@ function drawLandmarks(ctx, seed, left, right, palette) {
   const end = Math.ceil((right + 100) / 120);
 
   for (let cell = start; cell <= end; cell++) {
-    if (random(seed + 900, cell) > .16) continue;
+    if (random(seed + 900, cell) > .24) continue;
 
     const x = cell * 120 + random(seed + 901, cell) * 80;
     const ground = ridge(seed, x, 1) + 2;
-    const type = Math.floor(random(seed + 902, cell) * 3);
+    const type = random(seed + 902, cell) < .48 ? 0 : Math.floor(random(seed + 902, cell) * 2) + 1;
 
     if (type === 0) drawPagoda(ctx, x, ground, palette);
     else if (type === 1) drawBoat(ctx, x, 30, palette);
