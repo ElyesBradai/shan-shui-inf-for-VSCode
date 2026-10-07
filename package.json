@@ -1,8 +1,8 @@
 {
   "name": "shan-shui-statusbar",
   "displayName": "Shan Shui — Infinite Landscape Status Bar",
-  "description": "Lightweight, naturally proportioned ink scenery scrolling across the native status bar. A fresh random landscape every launch.",
-  "version": "1.2.0",
+  "description": "Lightweight, colorful Shan Shui scenery scrolling across the native status bar with layered depth and day/night themes. A fresh random landscape every launch.",
+  "version": "1.3.0",
   "publisher": "ElyesBradai",
   "license": "MIT",
   "repository": {
@@ -98,6 +98,22 @@
           "maximum": 30,
           "scope": "application",
           "description": "Maximum animation frames per second (10–30). Defaults to 20 to reduce CPU use."
+        },
+        "shanShui.mode": {
+          "type": "string",
+          "enum": [
+            "auto",
+            "day",
+            "night"
+          ],
+          "enumDescriptions": [
+            "Follow the VS Code/OS light or dark theme automatically.",
+            "Always use the colorful daytime palette.",
+            "Always use the darker nighttime palette."
+          ],
+          "default": "auto",
+          "scope": "application",
+          "description": "Landscape color mode. Auto follows the operating system color scheme."
         }
       }
     }
