@@ -81,10 +81,10 @@ function drawTrees(ctx, seed, left, right, palette) {
     const x = cell * 42 + random(seed + 44, cell) * 24;
     const ground = ridge(seed, x, 1) + 2;
     const sizeVariation = .7 + random(seed + 84, cell) * .7;
-    const treeHeight = (4.5 + random(seed + 83, cell) * 5.5) * sizeVariation;
+    const treeHeight = (6 + random(seed + 83, cell) * 7) * sizeVariation;
 
     ctx.strokeStyle = palette.treeStroke;
-    ctx.lineWidth = .7;
+    ctx.lineWidth = .9;
     ctx.beginPath();
     ctx.moveTo(x, ground);
     ctx.lineTo(x, ground - treeHeight);
@@ -108,19 +108,19 @@ function drawPagoda(ctx, x, ground, palette) {
   ctx.save();
   ctx.strokeStyle = palette.landmarkStroke;
   ctx.fillStyle = palette.landmarkFill;
-  ctx.lineWidth = .55;
+  ctx.lineWidth = .75;
 
   ctx.beginPath();
   ctx.moveTo(x, ground);
   ctx.lineTo(x, ground - 5);
-  ctx.moveTo(x - 2.5, ground - 4.5);
-  ctx.lineTo(x + 2.5, ground - 4.5);
-  ctx.moveTo(x - 1.8, ground - 4.5);
-  ctx.lineTo(x - 2.5, ground - 5.5);
+  ctx.moveTo(x - 3.5, ground - 6);
+  ctx.lineTo(x + 3.5, ground - 6);
+  ctx.moveTo(x - 1.8, ground - 6);
+  ctx.lineTo(x - 2.5, ground - 7);
   ctx.moveTo(x + 1.8, ground - 4.5);
   ctx.lineTo(x + 2.5, ground - 5.5);
-  ctx.moveTo(x - 1.4, ground - 2.5);
-  ctx.lineTo(x + 1.4, ground - 2.5);
+  ctx.moveTo(x - 1.4, ground - 4.5.5);
+  ctx.lineTo(x + 1.4, ground - 3.5);
   ctx.stroke();
   ctx.restore();
 }
@@ -131,15 +131,15 @@ function drawBoat(ctx, x, y, palette) {
   ctx.lineWidth = .65;
 
   ctx.beginPath();
-  ctx.moveTo(x - 4, y);
-  ctx.quadraticCurveTo(x, y + 1.8, x + 4, y);
+  ctx.moveTo(x - 6, y);
+  ctx.quadraticCurveTo(x, y + 1.8, x + 6, y);
   ctx.stroke();
 
   ctx.beginPath();
   ctx.moveTo(x, y);
-  ctx.lineTo(x, y - 3);
+  ctx.lineTo(x, y - 4.5);
   ctx.moveTo(x, y - 3);
-  ctx.lineTo(x + 2.5, y - 1);
+  ctx.lineTo(x + 3.5, y - 1.5);
   ctx.stroke();
   ctx.restore();
 }
@@ -147,10 +147,10 @@ function drawBoat(ctx, x, y, palette) {
 function drawBridge(ctx, x, ground, palette) {
   ctx.save();
   ctx.strokeStyle = palette.landmarkStroke;
-  ctx.lineWidth = .6;
+  ctx.lineWidth = .8;
   ctx.beginPath();
-  ctx.moveTo(x - 7, ground);
-  ctx.quadraticCurveTo(x, ground - 3, x + 7, ground);
+  ctx.moveTo(x - 9, ground);
+  ctx.quadraticCurveTo(x, ground - 3, x + 9, ground);
   ctx.stroke();
   ctx.restore();
 }
