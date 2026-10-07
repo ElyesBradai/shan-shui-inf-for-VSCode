@@ -356,8 +356,12 @@ export function createLandscape(canvas, config, environment = globalThis) {
     ctx.fillRect(0, 0, width, height);
     ctx.restore();
 
-    backgroundCache.prepare(offset * .15, width, height, dpr);
-    foregroundCache.prepare(offset * .45, width, height, dpr);
+    // Atmospheric layers use 1x rasterization to keep the three-layer
+    // composition inside the extension's native memory budget. Fine detail
+    // stays at the display DPR where it is most visible.
+    const atmosphericDpr = Math.min(1, dpr);
+    backgroundCache.prepare(offset * .15, width, height, atmosphericDpr);
+    foregroundCache.prepare(offset * .45, width, height, atmosphericDpr);
     detailCache.prepare(offset, width, height, dpr);
 
     backgroundCache.draw(ctx, offset * .15, height);
