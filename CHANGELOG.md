@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.2.0
+
+- Add layered distant, foreground, and detail rendering for depth.
+- Add parallax motion between landscape layers.
+- Add atmospheric mist and restrained ink hatching.
+- Add seeded pagodas, boats, and bridges as rare foreground landmarks.
+- Soften existing status-bar labels with translucent backgrounds so they remain readable without completely blocking the artwork.
+- Raster atmospheric layers at 1× on high-DPR displays while keeping foreground details at native display DPR.
+- Update documentation with the new renderer architecture and visual preview.
+
 ## 1.1.0
 
 - Replace 22–28 MiB SVG tiles and tens of thousands of shapes per tile with native canvas scenery.
