@@ -2,7 +2,7 @@
 
 A lightweight, endlessly scrolling ink landscape behind the **actual bottom status bar**. Every window launch or reload gets a fresh random seed.
 
-Version **1.2.0** uses a layered canvas renderer: distant mountains, foreground mountains, mist, trees, and occasional landmarks are rendered separately so the landscape has real depth while scrolling. The renderer remains tile-based and height-native for a 22-pixel status bar.
+Version **1.3.0** uses a layered canvas renderer: distant mountains, foreground mountains, mist, trees, and occasional landmarks are rendered separately so the landscape has real depth while scrolling. The renderer remains tile-based and height-native for a 22-pixel status bar.
 
 ![Shan Shui status bar preview](https://raw.githubusercontent.com/ElyesBradai/shan-shui-inf-for-VSCode/master/docs/statusbar-preview.svg)
 
@@ -14,7 +14,7 @@ The landscape is composed as three visual layers:
 - **Foreground mountains and mist** move at 45%, giving the scene a middle plane.
 - **Trees and landmarks** move at 100%, anchoring the foreground.
 
-The renderer also adds restrained ink hatching, drifting mist, and rare pagodas, boats, and bridges. These details are seeded, so each landscape stays deterministic after creation while every new launch still gets a fresh composition.
+The renderer also adds richer colors, larger foreground trees and landmarks, restrained ink hatching, drifting mist, and rare pagodas, boats, and bridges. Day and night palettes can follow your system theme automatically or be selected explicitly. These details are seeded, so each landscape stays deterministic after creation while every new launch still gets a fresh composition.
 
 Atmospheric layers rasterize at 1× when the display DPR is higher than 1; the foreground detail layer keeps the native display DPR. This preserves the visual hierarchy without multiplying the raster-memory cost of every layer.
 
@@ -26,9 +26,9 @@ Atmospheric layers rasterize at 1× when the display DPR is higher than 1; the f
 
 If you already uninstalled it, install the new VSIX temporarily and run Restore; it also removes the old 1.0 patch. Disabling/uninstalling an extension alone cannot remove an existing workbench customization.
 
-## Install 1.2.0
+## Install 1.3.0
 
-[**Download the latest VSIX from GitHub Releases**](https://github.com/ElyesBradai/shan-shui-inf-for-VSCode/raw/refs/heads/master/releases/shan-shui-statusbar-1.2.0.vsix)
+[**Download shan-shui-statusbar-1.3.0.vsix**](https://github.com/ElyesBradai/shan-shui-inf-for-VSCode/raw/refs/heads/master/releases/shan-shui-statusbar-1.3.0.vsix)
 
 1. Download the latest `.vsix` asset from the release.
 2. In VS Code choose **Extensions → … → Install from VSIX…**.
@@ -64,6 +64,7 @@ All commands start with **Shan Shui:**.
 | `shanShui.maxFPS` | `20` | 10–30. |
 | `shanShui.pauseWhenUnfocused` | `true` | Pause while another window has focus. |
 | `shanShui.respectReducedMotion` | `true` | Honor the OS motion preference. |
+| `shanShui.mode` | `auto` | `auto`, `day`, or `night`; auto follows the OS color scheme. |
 
 Choose **Apply** and **Reload Window** after changing settings. Existing user settings are preserved on upgrade; reset `shanShui.speed` and `shanShui.maxFPS` to use the new defaults.
 
