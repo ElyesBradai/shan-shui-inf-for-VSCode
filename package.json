@@ -102,18 +102,18 @@
         "shanShui.mode": {
           "type": "string",
           "enum": [
-            "auto",
+            "system",
             "day",
             "night"
           ],
           "enumDescriptions": [
-            "Follow the VS Code/OS light or dark theme automatically.",
+            "Follow the system light/dark appearance automatically.",
             "Always use the colorful daytime palette.",
             "Always use the darker nighttime palette."
           ],
-          "default": "auto",
+          "default": "system",
           "scope": "application",
-          "description": "Landscape color mode. Auto follows the operating system color scheme."
+          "description": "Landscape color mode: day, night, or the same as the system."
         }
       }
     }
