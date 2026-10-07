@@ -1,4 +1,4 @@
-# Changelog
+# Changelog\n\n## 1.3.2\n\n- Added an explicit `system` appearance option alongside day and night.\n- Fixed the direct VSIX download workflow.
 
 ## 1.3.1
 
