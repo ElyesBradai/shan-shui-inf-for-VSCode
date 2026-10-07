@@ -29,7 +29,7 @@ export function ridge(seed, x, layer) {
   return 24 - broad * 13 - secondary * 4 - detail;
 }
 
-function drawMountain(ctx, seed, left, right, layer) {
+function drawMountain(ctx, seed, left, right, layer, palette) {
   ctx.beginPath();
   ctx.moveTo(left - 2, 32);
   for (let x = Math.floor(left) - 2; x <= right + 2; x++) {
@@ -39,9 +39,9 @@ function drawMountain(ctx, seed, left, right, layer) {
   ctx.closePath();
 
   if (layer === 0) {
-    ctx.fillStyle = 'rgba(180,190,184,.48)';
+    ctx.fillStyle = palette.distantFill;
   } else {
-    ctx.fillStyle = 'rgba(90,108,98,.78)';
+    ctx.fillStyle = palette.foregroundFill;
   }
   ctx.fill();
 
@@ -51,16 +51,14 @@ function drawMountain(ctx, seed, left, right, layer) {
     if (x === Math.floor(left) - 2) ctx.moveTo(x, y);
     else ctx.lineTo(x, y);
   }
-  ctx.strokeStyle = layer === 0
-    ? 'rgba(105,120,112,.35)'
-    : 'rgba(55,73,62,.75)';
+  ctx.strokeStyle = layer === 0 ? palette.distantStroke : palette.foregroundStroke;
   ctx.lineWidth = layer === 0 ? .45 : .7;
   ctx.stroke();
 }
 
-function drawMist(ctx, seed, left, right) {
+function drawMist(ctx, seed, left, right, palette) {
   ctx.save();
-  ctx.fillStyle = 'rgba(233,229,218,.42)';
+  ctx.fillStyle = palette.mist;
   const start = Math.floor((left - 80) / 70);
   const end = Math.ceil((right + 80) / 70);
 
@@ -76,7 +74,7 @@ function drawMist(ctx, seed, left, right) {
   ctx.restore();
 }
 
-function drawTrees(ctx, seed, left, right) {
+function drawTrees(ctx, seed, left, right, palette) {
   for (let cell = Math.floor((left - 12) / 42); cell <= (right + 12) / 42; cell++) {
     if (random(seed + 401, cell) < .48) continue;
 
@@ -85,14 +83,14 @@ function drawTrees(ctx, seed, left, right) {
     const sizeVariation = .7 + random(seed + 84, cell) * .7;
     const treeHeight = (4.5 + random(seed + 83, cell) * 5.5) * sizeVariation;
 
-    ctx.strokeStyle = '#415b49';
+    ctx.strokeStyle = palette.treeStroke;
     ctx.lineWidth = .7;
     ctx.beginPath();
     ctx.moveTo(x, ground);
     ctx.lineTo(x, ground - treeHeight);
     ctx.stroke();
 
-    ctx.fillStyle = '#506b57';
+    ctx.fillStyle = palette.treeFill;
     for (let b = 0; b < 3; b++) {
       const y = ground - treeHeight + b * treeHeight * .23;
       const spread = treeHeight * (.20 + b * .13);
@@ -106,10 +104,10 @@ function drawTrees(ctx, seed, left, right) {
   }
 }
 
-function drawPagoda(ctx, x, ground) {
+function drawPagoda(ctx, x, ground, palette) {
   ctx.save();
-  ctx.strokeStyle = 'rgba(48,64,53,.8)';
-  ctx.fillStyle = 'rgba(55,72,60,.85)';
+  ctx.strokeStyle = palette.landmarkStroke;
+  ctx.fillStyle = palette.landmarkFill;
   ctx.lineWidth = .55;
 
   ctx.beginPath();
@@ -127,9 +125,9 @@ function drawPagoda(ctx, x, ground) {
   ctx.restore();
 }
 
-function drawBoat(ctx, x, y) {
+function drawBoat(ctx, x, y, palette) {
   ctx.save();
-  ctx.strokeStyle = 'rgba(45,61,51,.75)';
+  ctx.strokeStyle = palette.landmarkStroke;
   ctx.lineWidth = .65;
 
   ctx.beginPath();
@@ -146,9 +144,9 @@ function drawBoat(ctx, x, y) {
   ctx.restore();
 }
 
-function drawBridge(ctx, x, ground) {
+function drawBridge(ctx, x, ground, palette) {
   ctx.save();
-  ctx.strokeStyle = 'rgba(50,66,55,.65)';
+  ctx.strokeStyle = palette.landmarkStroke;
   ctx.lineWidth = .6;
   ctx.beginPath();
   ctx.moveTo(x - 7, ground);
@@ -157,7 +155,7 @@ function drawBridge(ctx, x, ground) {
   ctx.restore();
 }
 
-function drawLandmarks(ctx, seed, left, right) {
+function drawLandmarks(ctx, seed, left, right, palette) {
   const start = Math.floor((left - 100) / 120);
   const end = Math.ceil((right + 100) / 120);
 
@@ -168,11 +166,15 @@ function drawLandmarks(ctx, seed, left, right) {
     const ground = ridge(seed, x, 1) + 2;
     const type = Math.floor(random(seed + 902, cell) * 3);
 
-    if (type === 0) drawPagoda(ctx, x, ground);
-    else if (type === 1) drawBoat(ctx, x, 30);
-    else drawBridge(ctx, x, ground);
+    if (type === 0) drawPagoda(ctx, x, ground, palette);
+    else if (type === 1) drawBoat(ctx, x, 30, palette);
+    else drawBridge(ctx, x, ground, palette);
   }
 }
+
+const DAY_PALETTE = { distantFill:'rgba(126,157,174,.58)', distantStroke:'rgba(72,103,121,.58)', foregroundFill:'rgba(52,104,88,.88)', foregroundStroke:'rgba(25,67,52,.9)', mist:'rgba(246,240,220,.55)', hatching:'rgba(28,70,54,.42)', treeStroke:'#214f3b', treeFill:'#2f7650', landmarkStroke:'rgba(117,70,39,.95)', landmarkFill:'rgba(147,82,42,.95)', background:'#e9e5da' };
+const NIGHT_PALETTE = { distantFill:'rgba(65,88,126,.72)', distantStroke:'rgba(105,132,175,.62)', foregroundFill:'rgba(31,76,70,.94)', foregroundStroke:'rgba(72,139,122,.9)', mist:'rgba(173,190,201,.22)', hatching:'rgba(135,173,163,.34)', treeStroke:'#8fc4a8', treeFill:'#4f9b78', landmarkStroke:'rgba(224,170,92,.98)', landmarkFill:'rgba(220,151,67,.98)', background:'#101b2a' };
+function paletteFor(mode) { return mode === 'night' ? NIGHT_PALETTE : DAY_PALETTE; }
 
 function setupScene(ctx, start, width, height) {
   const scale = height / 32;
@@ -185,18 +187,18 @@ function setupScene(ctx, start, width, height) {
   return { left, right, scale };
 }
 
-function paintBackground(ctx, seed, start, width, height) {
+function paintBackground(ctx, seed, start, width, height, palette) {
   const { left, right } = setupScene(ctx, start, width, height);
-  drawMountain(ctx, seed, left, right, 0);
+  drawMountain(ctx, seed, left, right, 0, palette);
   ctx.restore();
 }
 
-function paintForeground(ctx, seed, start, width, height) {
+function paintForeground(ctx, seed, start, width, height, palette) {
   const { left, right } = setupScene(ctx, start, width, height);
-  drawMountain(ctx, seed, left, right, 1);
+  drawMountain(ctx, seed, left, right, 1, palette);
 
   ctx.lineWidth = .35;
-  ctx.strokeStyle = 'rgba(46,68,56,.3)';
+  ctx.strokeStyle = palette.hatching;
   ctx.beginPath();
   for (let cell = Math.floor((left - 15) / 5); cell <= (right + 15) / 5; cell++) {
     const x = cell * 5 + random(seed + 71, cell) * 3;
@@ -206,18 +208,18 @@ function paintForeground(ctx, seed, start, width, height) {
   }
   ctx.stroke();
 
-  drawMist(ctx, seed, left, right);
+  drawMist(ctx, seed, left, right, palette);
   ctx.restore();
 }
 
-function paintDetails(ctx, seed, start, width, height) {
+function paintDetails(ctx, seed, start, width, height, palette) {
   const { left, right } = setupScene(ctx, start, width, height);
-  drawTrees(ctx, seed, left, right);
-  drawLandmarks(ctx, seed, left, right);
+  drawTrees(ctx, seed, left, right, palette);
+  drawLandmarks(ctx, seed, left, right, palette);
   ctx.restore();
 }
 
-export function paintTile(ctx, seed, start, width, height) {
+export function paintTile(ctx, seed, start, width, height, palette = DAY_PALETTE) {
   // Both axes use the SAME scale. A 32-unit-tall scene is drawn directly at
   // the bar's height, never a full-sized landscape squeezed into a ribbon.
   const scale = height / 32;
@@ -225,14 +227,14 @@ export function paintTile(ctx, seed, start, width, height) {
   const right = (start + width) / scale;
 
   ctx.save();
-  ctx.fillStyle = '#e9e5da';
+  ctx.fillStyle = palette.background;
   ctx.fillRect(0, 0, width, height);
   ctx.scale(scale, scale);
   ctx.translate(-left, 0);
   ctx.lineJoin = 'round';
 
-  drawMountain(ctx, seed, left, right, 0);
-  drawMountain(ctx, seed, left, right, 1);
+  drawMountain(ctx, seed, left, right, 0, palette);
+  drawMountain(ctx, seed, left, right, 1, palette);
 
   ctx.lineWidth = .35;
   ctx.strokeStyle = 'rgba(46,68,56,.3)';
@@ -245,9 +247,9 @@ export function paintTile(ctx, seed, start, width, height) {
   }
   ctx.stroke();
 
-  drawMist(ctx, seed, left, right);
-  drawTrees(ctx, seed, left, right);
-  drawLandmarks(ctx, seed, left, right);
+  drawMist(ctx, seed, left, right, palette);
+  drawTrees(ctx, seed, left, right, palette);
+  drawLandmarks(ctx, seed, left, right, palette);
   ctx.restore();
 }
 
@@ -260,6 +262,7 @@ export class TileCache {
     this.tiles = new Map();
     this.height = 0;
     this.dpr = 0;
+    this.palette = DAY_PALETTE;
   }
 
   clear() {
@@ -297,7 +300,7 @@ export class TileCache {
       canvas.height = Math.ceil(height * dpr);
       const ctx = canvas.getContext('2d', { alpha: this.alpha });
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      this.painter(ctx, this.seed, index * TILE_WIDTH, TILE_WIDTH, height);
+      this.painter(ctx, this.seed, index * TILE_WIDTH, TILE_WIDTH, height, this.palette);
       this.tiles.set(index, canvas);
     }
   }
@@ -308,6 +311,11 @@ export class TileCache {
       const x = Math.round((index * TILE_WIDTH - offset) * this.dpr) / this.dpr;
       ctx.drawImage(canvas, x, 0, TILE_WIDTH, height);
     }
+  }
+
+  setPalette(palette) {
+    this.palette = palette;
+    this.clear();
   }
 
   get bytes() {
@@ -341,6 +349,11 @@ export function createLandscape(canvas, config, environment = globalThis) {
     paintDetails,
     true
   );
+  let mode = config.mode === 'night' ? 'night' : 'day';
+  let palette = paletteFor(mode);
+  backgroundCache.setPalette(palette);
+  foregroundCache.setPalette(palette);
+  detailCache.setPalette(palette);
 
   const ctx = canvas.getContext('2d', { alpha: false });
   let width = 0, height = 0, dpr = 1, offset = 0;
@@ -352,7 +365,7 @@ export function createLandscape(canvas, config, environment = globalThis) {
 
     ctx.save();
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.fillStyle = '#e9e5da';
+    ctx.fillStyle = palette.background;
     ctx.fillRect(0, 0, width, height);
     ctx.restore();
 
@@ -398,6 +411,17 @@ export function createLandscape(canvas, config, environment = globalThis) {
   }
 
   return {
+    setMode(value) {
+      const next = value === 'night' ? 'night' : 'day';
+      if (next === mode) return;
+      mode = next;
+      palette = paletteFor(mode);
+      backgroundCache.setPalette(palette);
+      foregroundCache.setPalette(palette);
+      detailCache.setPalette(palette);
+      paint();
+    },
+
     resize(w, h, ratio) {
       if (disposed) return;
 
