@@ -14,7 +14,8 @@ function normalizeConfig(input = {}) {
     speed: number('speed', 6, 0, 80), opacity: number('opacity', .85, .1, 1),
     maxFPS: Math.round(number('maxFPS', 20, 10, 30)),
     pauseWhenUnfocused: input.pauseWhenUnfocused !== false,
-    respectReducedMotion: input.respectReducedMotion !== false
+    respectReducedMotion: input.respectReducedMotion !== false,
+    mode: ['auto', 'day', 'night'].includes(input.mode) ? input.mode : 'auto'
   };
 }
 function stripPatch(html) {
