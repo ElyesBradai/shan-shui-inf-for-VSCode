@@ -119,7 +119,7 @@ function drawPagoda(ctx, x, ground, palette) {
   ctx.lineTo(x - 2.5, ground - 7);
   ctx.moveTo(x + 1.8, ground - 4.5);
   ctx.lineTo(x + 2.5, ground - 5.5);
-  ctx.moveTo(x - 1.4, ground - 4.5.5);
+  ctx.moveTo(x - 1.4, ground - 3.5);
   ctx.lineTo(x + 1.4, ground - 3.5);
   ctx.stroke();
   ctx.restore();
