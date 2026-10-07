@@ -28,7 +28,7 @@ If you already uninstalled it, install the new VSIX temporarily and run Restore;
 
 ## Install 1.2.0
 
-[**Download the latest VSIX from GitHub Releases**](https://github.com/ElyesBradai/shan-shui-inf-for-VSCode/releases/latest)
+[**Download the latest VSIX from GitHub Releases**](https://github.com/ElyesBradai/shan-shui-inf-for-VSCode/raw/refs/heads/master/releases/shan-shui-statusbar-1.2.0.vsix)
 
 1. Download the latest `.vsix` asset from the release.
 2. In VS Code choose **Extensions → … → Install from VSIX…**.
