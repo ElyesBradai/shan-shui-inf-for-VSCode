@@ -6,7 +6,7 @@ import { createLandscape, MAX_WIDTH, MAX_HEIGHT } from './landscape.mjs';
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
   const listeners = new AbortController();
   let bar, canvas, landscape, observer, resizeObserver;
-  let disposed = false, lookupTimer = 0, attempts = 0;
+  let disposed = false, lookupTimer = 0, attempts = 0, themeListener;
 
   function updateMotion() {
     landscape?.setRunning(!document.hidden && (!config.pauseWhenUnfocused || document.hasFocus()) &&
@@ -45,6 +45,11 @@ import { createLandscape, MAX_WIDTH, MAX_HEIGHT } from './landscape.mjs';
       canvas.setAttribute('aria-hidden', 'true');
       canvas.style.setProperty('--shan-shui-opacity', String(config.opacity));
       landscape = createLandscape(canvas, config);
+      const theme = matchMedia('(prefers-color-scheme: dark)');
+      const applyTheme = () => landscape?.setMode(config.mode === 'auto' ? (theme.matches ? 'night' : 'day') : config.mode);
+      themeListener = applyTheme;
+      applyTheme();
+      theme.addEventListener('change', applyTheme, { signal: listeners.signal });
       bar.prepend(canvas);
       bar.classList.add('shan-shui-active');
       resizeObserver = new ResizeObserver(resize);
