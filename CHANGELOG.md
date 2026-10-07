@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.3.1
+
+- Made pagodas much larger, more ornate, and more visually prominent.
+- Increased pagoda frequency so the landmark reads clearly in the status bar.
+
 ## 1.3.0
 
 - Added richer, more colorful day and night scenery palettes.
