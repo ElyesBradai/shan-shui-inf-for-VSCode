@@ -14,7 +14,7 @@ The landscape is composed as three visual layers:
 - **Foreground mountains and mist** move at 45%, giving the scene a middle plane.
 - **Trees and landmarks** move at 100%, anchoring the foreground.
 
-The renderer also adds richer colors, larger foreground trees and landmarks, restrained ink hatching, drifting mist, and rare pagodas, boats, and bridges. Day and night palettes can follow your system theme automatically or be selected explicitly. These details are seeded, so each landscape stays deterministic after creation while every new launch still gets a fresh composition.
+The renderer also adds richer colors, larger foreground trees and landmarks, restrained ink hatching, drifting mist, and rare pagodas, boats, and bridges. Day and night palettes can follow your system theme systemmatically or be selected explicitly. These details are seeded, so each landscape stays deterministic after creation while every new launch still gets a fresh composition.
 
 Atmospheric layers rasterize at 1× when the display DPR is higher than 1; the foreground detail layer keeps the native display DPR. This preserves the visual hierarchy without multiplying the raster-memory cost of every layer.
 
@@ -64,8 +64,7 @@ All commands start with **Shan Shui:**.
 | `shanShui.maxFPS` | `20` | 10–30. |
 | `shanShui.pauseWhenUnfocused` | `true` | Pause while another window has focus. |
 | `shanShui.respectReducedMotion` | `true` | Honor the OS motion preference. |
-| `shanShui.mode` | `auto` | `auto`, `day`, or `night`; auto follows the OS color scheme. |
-
+| `shanShui.mode | system | Choose day, night, or system (follows your OS appearance).\n
 Choose **Apply** and **Reload Window** after changing settings. Existing user settings are preserved on upgrade; reset `shanShui.speed` and `shanShui.maxFPS` to use the new defaults.
 
 ## Desktop customization
