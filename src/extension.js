@@ -4,7 +4,7 @@ const patcher = require('./patcher');
 let output;
 function getConfig() {
   const settings = vscode.workspace.getConfiguration('shanShui');
-  return Object.fromEntries(['speed', 'opacity', 'maxFPS', 'pauseWhenUnfocused', 'respectReducedMotion']
+  return Object.fromEntries(['speed', 'opacity', 'maxFPS', 'pauseWhenUnfocused', 'respectReducedMotion', 'mode']
     .map(key => [key, settings.get(key)]));
 }
 function friendlyError(error) {
