@@ -2,7 +2,21 @@
 
 A lightweight, endlessly scrolling ink landscape behind the **actual bottom status bar**. Every window launch or reload gets a fresh random seed.
 
-Version **1.1.0** replaces the expensive full-size SVG renderer with small canvas tiles designed for a 22-pixel status bar. Mountains and trees use the same scale in both directions.
+Version **1.2.0** uses a layered canvas renderer: distant mountains, foreground mountains, mist, trees, and occasional landmarks are rendered separately so the landscape has real depth while scrolling. The renderer remains tile-based and height-native for a 22-pixel status bar.
+
+![Shan Shui status bar preview](https://raw.githubusercontent.com/ElyesBradai/shan-shui-inf-for-VSCode/master/docs/statusbar-preview.svg)
+
+## Depth and parallax
+
+The landscape is composed as three visual layers:
+
+- **Distant mountains** move at 15% of the scroll speed, creating atmospheric depth.
+- **Foreground mountains and mist** move at 45%, giving the scene a middle plane.
+- **Trees and landmarks** move at 100%, anchoring the foreground.
+
+The renderer also adds restrained ink hatching, drifting mist, and rare pagodas, boats, and bridges. These details are seeded, so each landscape stays deterministic after creation while every new launch still gets a fresh composition.
+
+Atmospheric layers rasterize at 1× when the display DPR is higher than 1; the foreground detail layer keeps the native display DPR. This preserves the visual hierarchy without multiplying the raster-memory cost of every layer.
 
 ## Remove version 1.0 first
 
@@ -12,9 +26,11 @@ Version **1.1.0** replaces the expensive full-size SVG renderer with small canva
 
 If you already uninstalled it, install the new VSIX temporarily and run Restore; it also removes the old 1.0 patch. Disabling/uninstalling an extension alone cannot remove an existing workbench customization.
 
-## Install 1.1.0
+## Install 1.2.0
 
-1. [Download shan-shui-statusbar-1.1.0.vsix](https://github.com/ElyesBradai/shan-shui-inf-for-VSCode/raw/refs/heads/master/releases/shan-shui-statusbar-1.1.0.vsix).
+[**Download the latest VSIX from GitHub Releases**](https://github.com/ElyesBradai/shan-shui-inf-for-VSCode/releases/latest)
+
+1. Download the latest `.vsix` asset from the release.
 2. In VS Code choose **Extensions → … → Install from VSIX…**.
 3. Run **Shan Shui: Enable / Repair Landscape** and choose **Reload Window**.
 
@@ -24,7 +40,7 @@ Keep **View → Appearance → Status Bar** enabled. By default, scrolling pause
 
 - No SVG documents, image decoders, blobs, workers, or stored scene geometry.
 - Only the visible 256-pixel tiles are cached. Evicted canvas buffers are explicitly zeroed.
-- At a 1920 × 22 status bar and 2× display scaling, the display and tile buffers total **under 1.5 MiB**. This is backing-buffer accounting, not a promise about total VS Code process memory or browser overhead.
+- At a 1920 × 22 status bar and 2× display scaling, the display and tile buffers stay within the extension's bounded raster budget. Atmospheric layers use 1× backing stores at high-DPR displays to keep that budget predictable.
 - Default **20 FPS**, with no timer or animation callback running while paused.
 - Both axes scale equally; the scene is drawn for the status bar's height rather than squeezing a tall painting.
 - No observer on the editor's full DOM tree.
@@ -53,7 +69,7 @@ Choose **Apply** and **Reload Window** after changing settings. Existing user se
 
 ## Desktop customization
 
-VS Code's supported API does not expose native status-bar images. This extension uses a **reversible, unsupported desktop workbench patch**. It backs up `workbench.html` and adds local script/style references. Version 1.1 leaves the Content Security Policy unchanged and removes the old worker policy when upgrading.
+VS Code's supported API does not expose native status-bar images. This extension uses a **reversible, unsupported desktop workbench patch**. It backs up `workbench.html` and adds local script/style references. Version 1.2 leaves the Content Security Policy unchanged and removes the old worker policy when upgrading.
 
 A writable **desktop VS Code 1.96+** installation is required. Windows User Setup or a user-owned Linux archive is suitable; macOS application files must be writable. Install the extension locally when using SSH/WSL/containers. VS Code for the Web and read-only installations are unsupported. No administrator privileges are requested.
 
