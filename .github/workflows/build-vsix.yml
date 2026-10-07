@@ -1,0 +1,39 @@
+name: Build VSIX
+
+on:
+  push:
+    branches: [master]
+
+permissions:
+  contents: write
+
+jobs:
+  package:
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install VS Code packaging tool
+        run: npm install --global @vscode/vsce
+
+      - name: Test
+        run: npm test
+
+      - name: Build official VSIX
+        run: vsce package --out releases/shan-shui-statusbar-${{ github.event.repository.default_branch }}.vsix
+
+      - name: Rename and publish VSIX
+        shell: bash
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          mv "releases/shan-shui-statusbar-${{ github.event.repository.default_branch }}.vsix" "releases/shan-shui-statusbar-$VERSION.vsix"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "releases/shan-shui-statusbar-$VERSION.vsix"
+          git commit -m "build: publish VSIX $VERSION [skip ci]" || exit 0
+          git push
