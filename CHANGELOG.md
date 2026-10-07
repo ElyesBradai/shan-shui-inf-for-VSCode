@@ -1,3 +1,11 @@
+# Changelog
+
+## 1.3.3
+
+- Rebuild the VSIX with the official VS Code extension packager.
+- Fix the corrupted 1.3.2/1.3.3 manual ZIP packages.
+- Keep the explicit system, day, and night appearance settings.
+
 # Changelog\n\n## 1.3.2\n\n- Added an explicit `system` appearance option alongside day and night.\n- Fixed the direct VSIX download workflow.
 
 ## 1.3.1
