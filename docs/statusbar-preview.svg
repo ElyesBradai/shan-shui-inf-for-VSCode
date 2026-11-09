@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="110" viewBox="0 0 1200 110" role="img" aria-labelledby="title desc">
+  <title id="title">Shan Shui VS Code status bar preview</title>
+  <desc id="desc">A panoramic Chinese ink landscape with layered mountains, mist, pine trees, and a small pagoda.</desc>
+  <defs>
+    <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#e8eee8"/><stop offset="1" stop-color="#cbd8cf"/></linearGradient>
+    <linearGradient id="far" x2="0" y2="1"><stop stop-color="#83978d"/><stop offset="1" stop-color="#536c62"/></linearGradient>
+    <linearGradient id="near" x2="0" y2="1"><stop stop-color="#465d53"/><stop offset="1" stop-color="#263c34"/></linearGradient>
+    <filter id="soft"><feGaussianBlur stdDeviation="7"/></filter>
+  </defs>
+  <rect width="1200" height="110" fill="url(#sky)"/>
+  <path d="M0 72 92 25 155 58 250 9 340 65 430 21 520 69 625 15 720 67 820 25 915 68 1015 12 1110 65 1200 28V110H0Z" fill="url(#far)" opacity=".72"/>
+  <path d="m0 83 120-39 78 30 112-58 94 58 105-37 94 40 112-53 93 48 109-40 100 40 95-34 88 32v40H0Z" fill="#aabbb0" opacity=".65"/>
+  <path d="M0 91 Q140 67 255 87T500 83T750 88T1000 80T1200 87" fill="none" stroke="#f5f6ed" stroke-width="13" opacity=".8" filter="url(#soft)"/>
+  <path d="M0 94 95 67l67 20 94-43 82 50 100-27 79 26 108-51 82 49 103-31 86 32 92-44 112 49v13H0Z" fill="url(#near)"/>
+  <g fill="none" stroke="#dce4d9" stroke-width="1.4" opacity=".55">
+    <path d="m210 83 42-24 37 24m-24-11 24-13 22 13M570 84l48-30 45 30m-25-16 25-16 24 16M930 83l43-25 38 25"/>
+    <path d="m273 65 20-11 16 11m289 4 31-19 29 19m322-2 30-17 27 17"/>
+  </g>
+  <g stroke="#263c34" stroke-width="2" fill="none" stroke-linecap="round">
+    <path d="M145 100V69m-13 12 13-17 13 17m-21-6 21-13 19 13m-32 18 13-12 14 12"/>
+    <path d="M1080 103V62m-18 17 18-24 18 24m-27-7 27-17 24 17m-41 17 17-14 19 14"/>
+    <path d="M1105 100V77m-9 8 9-13 10 13"/>
+  </g>
+  <g transform="translate(760 59)" stroke="#263c34" stroke-width="2" fill="#344b41">
+    <path d="M-22 0 0-13 22 0Z"/><path d="M-17-4H17V1H-17Z"/><path d="M-14 1H14V19H-14Z" />
+    <path d="M-19 19H19V23H-19Z"/><path d="M-24 24H24V28H-24Z"/><path d="M0-13V-20" fill="none"/>
+  </g>
+  <path d="M0 105 Q190 96 360 104T720 101T1020 103T1200 99" fill="none" stroke="#dce5dc" stroke-width="2" opacity=".5"/>
+</svg>
